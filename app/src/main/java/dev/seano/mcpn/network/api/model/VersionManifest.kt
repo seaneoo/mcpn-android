@@ -1,10 +1,12 @@
 package dev.seano.mcpn.network.api.model
 
-import com.google.gson.annotations.SerializedName
 import dev.seano.mcpn.network.api.model.VersionManifest.Version.Type.Alpha
 import dev.seano.mcpn.network.api.model.VersionManifest.Version.Type.Beta
 import dev.seano.mcpn.network.api.model.VersionManifest.Version.Type.Release
 import dev.seano.mcpn.network.api.model.VersionManifest.Version.Type.Snapshot
+import dev.seano.mcpn.network.util.ZonedDateTimeSerializer
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import java.time.ZonedDateTime
 
 /**
@@ -12,6 +14,7 @@ import java.time.ZonedDateTime
  * @param latest The latest release and snapshot versions.
  * @param versions A list of all game versions.
  */
+@Serializable
 data class VersionManifest(
     val latest: Latest,
     val versions: List<Version>,
@@ -22,6 +25,7 @@ data class VersionManifest(
      * @param release The latest release version.
      * @param snapshot The latest snapshot version.
      */
+    @Serializable
     data class Latest(
         val release: String,
         val snapshot: String,
@@ -36,12 +40,13 @@ data class VersionManifest(
      * @param releaseTime The date and time the version was initially released.
      * @param sha1 The SHA-1 hash of the version metadata.
      */
+    @Serializable
     data class Version(
         val id: String,
         val type: Type,
         val url: String,
-        val time: ZonedDateTime,
-        val releaseTime: ZonedDateTime,
+        @Serializable(with = ZonedDateTimeSerializer::class) val time: ZonedDateTime,
+        @Serializable(with = ZonedDateTimeSerializer::class) val releaseTime: ZonedDateTime,
         val sha1: String,
     ) {
 
@@ -51,18 +56,19 @@ data class VersionManifest(
          * @property Beta The version is a beta release (>= b1.0, <= b1.8.1).
          * @property Alpha The version is an alpha release (>= rd-132211, <= a1.2.6).
          */
+        @Serializable
         enum class Type {
 
-            @SerializedName("release")
+            @SerialName("release")
             Release,
 
-            @SerializedName("snapshot")
+            @SerialName("snapshot")
             Snapshot,
 
-            @SerializedName("old_beta")
+            @SerialName("old_beta")
             Beta,
 
-            @SerializedName("old_alpha")
+            @SerialName("old_alpha")
             Alpha
         }
     }

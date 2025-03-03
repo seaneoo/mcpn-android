@@ -1,6 +1,5 @@
 package dev.seano.mcpn.network
 
-import dev.seano.mcpn.network.util.ZonedDateTimeTypeDeserializer
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -12,15 +11,15 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.request
 import io.ktor.http.HttpMethod
-import io.ktor.serialization.gson.gson
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
 import timber.log.Timber
 import java.net.ConnectException
 import java.net.NoRouteToHostException
 import java.net.UnknownHostException
-import java.time.ZonedDateTime
 
 class NetworkClient {
 
@@ -40,9 +39,10 @@ class NetworkClient {
                 socketTimeoutMillis = 10000
             }
             install(ContentNegotiation) {
-                gson {
-                    registerTypeAdapter(ZonedDateTime::class.java, ZonedDateTimeTypeDeserializer())
-                }
+                json(Json {
+                    explicitNulls = false
+                    ignoreUnknownKeys = true
+                })
             }
         }
     }
