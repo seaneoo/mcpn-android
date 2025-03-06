@@ -20,6 +20,7 @@ class ApiService(private val networkClient: NetworkClient) {
         const val VERSION_METADATA = "v1/packages/%s/%s"
         const val LAUNCHER_CONTENT_BASE_URL = "https://launchercontent.mojang.com"
         const val JAVA_PATCH_NOTES = "v2/javaPatchNotes.json"
+        const val BEDROCK_PATCH_NOTES = "v2/bedrockPatchNotes.json"
     }
 
     private suspend inline fun <reified T> fetch(
@@ -45,6 +46,11 @@ class ApiService(private val networkClient: NetworkClient) {
         Endpoints.PISTON_META_BASE_URL, Endpoints.VERSION_METADATA.format(sha1, "$id.json")
     )
 
-    suspend fun getJavaPatchNotes() =
-        fetch<PatchNotes>(Endpoints.LAUNCHER_CONTENT_BASE_URL, Endpoints.JAVA_PATCH_NOTES)
+    suspend fun getJavaPatchNotes() = fetch<PatchNotes<PatchNotes.JavaEntry>>(
+        Endpoints.LAUNCHER_CONTENT_BASE_URL, Endpoints.JAVA_PATCH_NOTES
+    )
+
+    suspend fun getBedrockPatchNotes() = fetch<PatchNotes<PatchNotes.BedrockEntry>>(
+        Endpoints.LAUNCHER_CONTENT_BASE_URL, Endpoints.BEDROCK_PATCH_NOTES
+    )
 }
