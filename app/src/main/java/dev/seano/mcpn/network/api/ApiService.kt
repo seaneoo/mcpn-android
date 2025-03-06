@@ -3,6 +3,7 @@ package dev.seano.mcpn.network.api
 import dev.seano.mcpn.network.NetworkClient
 import dev.seano.mcpn.network.NetworkError
 import dev.seano.mcpn.network.Result
+import dev.seano.mcpn.network.api.model.PatchNotes
 import dev.seano.mcpn.network.api.model.VersionManifest
 import dev.seano.mcpn.network.api.model.VersionMetadata
 import dev.seano.mcpn.network.onFailure
@@ -17,6 +18,8 @@ class ApiService(private val networkClient: NetworkClient) {
         const val PISTON_META_BASE_URL = "https://piston-meta.mojang.com"
         const val VERSION_MANIFEST = "mc/game/version_manifest_v2.json"
         const val VERSION_METADATA = "v1/packages/%s/%s"
+        const val LAUNCHER_CONTENT_BASE_URL = "https://launchercontent.mojang.com"
+        const val JAVA_PATCH_NOTES = "v2/javaPatchNotes.json"
     }
 
     private suspend inline fun <reified T> fetch(
@@ -41,4 +44,7 @@ class ApiService(private val networkClient: NetworkClient) {
     ): Result<VersionMetadata, NetworkError> = fetch<VersionMetadata>(
         Endpoints.PISTON_META_BASE_URL, Endpoints.VERSION_METADATA.format(sha1, "$id.json")
     )
+
+    suspend fun getJavaPatchNotes() =
+        fetch<PatchNotes>(Endpoints.LAUNCHER_CONTENT_BASE_URL, Endpoints.JAVA_PATCH_NOTES)
 }
