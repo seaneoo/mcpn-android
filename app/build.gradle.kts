@@ -68,6 +68,11 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     testImplementation(libs.ktor.client.mock)
 
+    // Coil
+    implementation(libs.coil)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.ktor3)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
